@@ -9,16 +9,16 @@ export function LiquidMetalBackground() {
   }, [])
 
   if (!mounted) {
-    return <div className="absolute inset-0 -z-10 bg-[#00042e]" />
+    return <div className="absolute inset-0 -z-10 bg-[#0a0014]" />
   }
 
   return (
     <div className="absolute inset-0 -z-10">
       <Warp
         style={{ width: "100%", height: "100%" }}
-        color1="hsla(240, 100%, 5%, 1)"
-        color2="hsla(260, 70%, 35%, 1)"
-        color3="hsla(280, 50%, 50%, 1)"
+        color1="hsla(270, 100%, 4%, 1)"
+        color2="hsla(265, 75%, 30%, 1)"
+        color3="hsla(285, 70%, 55%, 1)"
         scale={0.5}
         rotation={0}
         speed={0.15}
