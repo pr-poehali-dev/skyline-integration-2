@@ -11,13 +11,39 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { MapPinIcon, GraduationCapIcon, SchoolIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import func2url from "../../backend/func2url.json"
 
 export default function Index() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const pricingSectionRef = useRef<HTMLDivElement>(null)
   const aboutSectionRef = useRef<HTMLDivElement>(null)
   const contactSectionRef = useRef<HTMLDivElement>(null)
+
+  const [wishName, setWishName] = useState("")
+  const [wishText, setWishText] = useState("")
+  const [wishStatus, setWishStatus] = useState<"idle" | "sending" | "done" | "error">("idle")
+
+  const sendWish = async () => {
+    if (!wishText.trim()) return
+    setWishStatus("sending")
+    try {
+      const res = await fetch(func2url["send-wish"], {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: wishName, wish: wishText }),
+      })
+      if (res.ok) {
+        setWishStatus("done")
+        setWishName("")
+        setWishText("")
+      } else {
+        setWishStatus("error")
+      }
+    } catch {
+      setWishStatus("error")
+    }
+  }
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current
@@ -304,32 +330,58 @@ export default function Index() {
                 },
               ]}
             >
-              <form action="" className="w-full space-y-4">
-                <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Ваше имя
-                  </Label>
-                  <Input
-                    type="text"
-                    placeholder="Например, мама Татьяны"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Пожелание выпускникам
-                  </Label>
-                  <Textarea
-                    placeholder="Напишите тёплые слова..."
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] min-h-[140px]"
-                  />
-                </div>
-                <Button
-                  className="w-full bg-purple-500 text-white hover:bg-purple-400 [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)] font-open-sans-custom"
-                  type="button"
-                >
-                  Отправить пожелание
-                </Button>
+              <form className="w-full space-y-4" onSubmit={(e) => { e.preventDefault(); sendWish() }}>
+                {wishStatus === "done" ? (
+                  <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
+                    <span className="text-4xl">🎉</span>
+                    <p className="text-white font-semibold font-open-sans-custom text-lg">Пожелание отправлено!</p>
+                    <p className="text-gray-300 text-sm font-open-sans-custom">Спасибо за тёплые слова</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mt-2 border-purple-400/40 text-purple-200 hover:bg-purple-500/20 font-open-sans-custom"
+                      onClick={() => setWishStatus("idle")}
+                    >
+                      Написать ещё
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
+                        Ваше имя
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="Например, мама Татьяны"
+                        value={wishName}
+                        onChange={(e) => setWishName(e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
+                        Пожелание выпускникам
+                      </Label>
+                      <Textarea
+                        placeholder="Напишите тёплые слова..."
+                        value={wishText}
+                        onChange={(e) => setWishText(e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] min-h-[140px]"
+                      />
+                    </div>
+                    {wishStatus === "error" && (
+                      <p className="text-red-400 text-sm font-open-sans-custom">Ошибка отправки. Попробуйте ещё раз.</p>
+                    )}
+                    <Button
+                      className="w-full bg-purple-500 text-white hover:bg-purple-400 [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)] font-open-sans-custom"
+                      type="submit"
+                      disabled={wishStatus === "sending" || !wishText.trim()}
+                    >
+                      {wishStatus === "sending" ? "Отправляем..." : "Отправить пожелание"}
+                    </Button>
+                  </>
+                )}
               </form>
             </ContactCard>
           </div>
