@@ -156,24 +156,46 @@ export default function Index() {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <section id="home" className="flex min-w-full snap-start items-center justify-center px-4 py-20">
-          <div className="mx-auto max-w-4xl">
-            <div className="text-center px-0 leading-5">
-              <p className="mb-4 text-base uppercase tracking-[0.4em] text-purple-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-open-sans-custom">
-                МБОУ СОШ №5 · г. Завитинск
-              </p>
-              <h1 className="mb-8 text-balance text-5xl tracking-tight text-white [text-shadow:_0_4px_20px_rgb(0_0_0_/_60%)] md:text-6xl lg:text-8xl">
-                <span className="font-open-sans-custom not-italic">С</span>{" "}
-                <span className="font-serif italic">Выпускным</span>{" "}
-                <span className="font-open-sans-custom not-italic">2026!</span>
-              </h1>
+          <div className="mx-auto max-w-5xl w-full">
+            <div className="flex flex-col lg:flex-row items-center gap-10">
+              {/* Фото на главной */}
+              <div className="relative flex-shrink-0">
+                <div className="w-56 h-56 md:w-72 md:h-72 rounded-full border-2 border-purple-400/50 overflow-hidden bg-white/5 backdrop-blur-sm flex items-center justify-center shadow-[0_0_40px_rgba(168,85,247,0.3)]">
+                  <img
+                    src="/images/hero-photo.jpg"
+                    alt="Фото выпускницы"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const t = e.currentTarget
+                      t.style.display = "none"
+                      t.nextElementSibling?.classList.remove("hidden")
+                    }}
+                  />
+                  <div className="hidden flex-col items-center gap-2 text-center px-4">
+                    <span className="text-4xl">🎓</span>
+                    <span className="text-purple-300 text-xs font-open-sans-custom">Загрузите фото<br/>hero-photo.jpg</span>
+                  </div>
+                </div>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-purple-500 border-2 border-black flex items-center justify-center text-sm">✨</div>
+              </div>
 
-              <p className="mb-8 mx-auto max-w-2xl text-pretty leading-relaxed text-gray-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-thin font-open-sans-custom tracking-wide leading-7 text-xl">
-                Поздравляем нашу выпускницу и всех, кто прошёл этот путь —{" "}
-                <span className="font-serif italic">впереди новая глава</span>, и она будет яркой
-              </p>
-
-              <div className="flex justify-center">
-                <ShinyButton className="px-8 py-3 text-base">смотреть поздравление</ShinyButton>
+              {/* Текст */}
+              <div className="text-center lg:text-left px-0 leading-5">
+                <p className="mb-4 text-base uppercase tracking-[0.4em] text-purple-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-open-sans-custom">
+                  МБОУ СОШ №5 · г. Завитинск
+                </p>
+                <h1 className="mb-8 text-balance text-5xl tracking-tight text-white [text-shadow:_0_4px_20px_rgb(0_0_0_/_60%)] md:text-6xl lg:text-7xl">
+                  <span className="font-open-sans-custom not-italic">С</span>{" "}
+                  <span className="font-serif italic">Выпускным</span>{" "}
+                  <span className="font-open-sans-custom not-italic">2026!</span>
+                </h1>
+                <p className="mb-8 max-w-2xl text-pretty leading-relaxed text-gray-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-thin font-open-sans-custom tracking-wide text-xl">
+                  Поздравляем нашу выпускницу и всех, кто прошёл этот путь —{" "}
+                  <span className="font-serif italic">впереди новая глава</span>, и она будет яркой
+                </p>
+                <div className="flex justify-center lg:justify-start">
+                  <ShinyButton className="px-8 py-3 text-base">смотреть поздравление</ShinyButton>
+                </div>
               </div>
             </div>
           </div>
